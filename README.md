@@ -1,4 +1,4 @@
-yandexmaps
+Yandex Maps
 ==========
 
 Yii Yandex Maps extension
