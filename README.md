@@ -3,7 +3,7 @@ yandexmaps
 
 Yii Yandex Maps extension
 
-<code>
+[code]
 	$this->widget('ext.yandexmap.YandexMap',array(
 		'id'=>'map',
 		'width'=>600,
@@ -30,4 +30,4 @@ Yii Yandex Maps extension
 			)
 		),
 	));
-</code>
+[/code]
