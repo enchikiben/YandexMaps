@@ -23,8 +23,8 @@ Yii Yandex Maps extension
 		'polyline' => array(
 			array('lat'=>55.80,'lon'=>37.30),
 			array('lat'=>55.80,'lon'=>37.40),
-            array('lat'=>55.70,'lon'=>37.30),
-            array('lat'=>55.70,'lon'=>37.40),
+            		array('lat'=>55.70,'lon'=>37.30),
+            		array('lat'=>55.70,'lon'=>37.40),
 			'options'=>array(
 				'strokeWidth'=> 5 // ширина линии'
 			)
