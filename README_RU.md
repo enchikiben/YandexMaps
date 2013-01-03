@@ -39,7 +39,7 @@ Yii Yandex Maps дополнение, позволяющее создавать 
             		array('lat'=>55.70,'lon'=>37.30),
             		array('lat'=>55.70,'lon'=>37.40),
 			'options'=>array(
-				'strokeWidth'=> 5 // ширина линии'
+				'strokeWidth'=> 5
 			)
 		),
 	));
@@ -49,7 +49,7 @@ Yii Yandex Maps дополнение, позволяющее создавать 
 Использование Placemark
 ---
 
-Placemark (labels) - can be passed as a single item or a group of elements.
+Placemark (метки) - можно передевать как один элемент или как грумму элементов.
 
 ~~~
 [php]
@@ -100,7 +100,7 @@ Placemark (labels) - can be passed as a single item or a group of elements.
 Use Polyline
 ---
 
-Polyline (broken lines) - can be passed as a single item or as Grumm elements. Tocher coordinates given arrays, and can be infinite.
+Polyline (ломаные линии) - можно передевать как один элемент или как грумму элементов. Координаты точер задаются массивом и может быть бесконечно много.
 
 ~~~
 [php]

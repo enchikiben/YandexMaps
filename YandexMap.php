@@ -29,34 +29,34 @@ class YandexMap extends CWidget
 	
 	protected function registerClientScript()
     {
-        $cs=Yii::app()->clientScript;
-		
+		$cs=Yii::app()->clientScript;
+
 		$url = array();
 		$url[] = "load=".$this->load;
 		$url[] = "lang=".$this->lang;		
-		
-        $cs->registerScriptFile($this->protocol."api-maps.yandex.ru/2.0-stable/?".  implode("&", $url) );
-		
+
+		$cs->registerScriptFile($this->protocol."api-maps.yandex.ru/2.0-stable/?".  implode("&", $url) );
+
 		$jsOptions = array();
-		
+
 		if (is_array($this->center) && !empty($this->center) ) 
 			$jsOptions[] = "center:[{$this->center[0]},{$this->center[1]}]";
-		
+
 		if ( $this->zoom ) 
 			$jsOptions[] = 'zoom:'.$this->zoom;
-		
+
 		$controls = array();
 
 		if ( $this->zoomControl ) $controls[] = "add('zoomControl')";		
 		if ( $this->typeSelector ) $controls[] = "add('typeSelector')";		
 		if ( $this->smallZoomControl ) $controls[] = "add('mapTools')";		
 		if ( $this->miniMap ) $controls[] = "add('miniMap')";		
-		
+
 		$controls = "map.controls.".implode('.', $controls);
-		
+
 		$placemark = $this->placemarks();		
 		$polyline = $this->polylines();		
-		
+
 		$options = implode(",",$jsOptions);
 		$js = <<<EQF
 
@@ -153,16 +153,16 @@ EQF;
 	}	
 	
 	public function init()
-    {
-        $this->registerClientScript();
-    }
+	{
+		$this->registerClientScript();
+	}
  
-    public function run()
-    {
-        echo CHtml::tag('div',array(
+	public function run()
+	{
+		echo CHtml::tag('div',array(
 				'id' => $this->id,
 				'style' => "width:{$this->width}px;height:{$this->height}px;"
 			));		
-    }	
+	}	
 }
 ?>

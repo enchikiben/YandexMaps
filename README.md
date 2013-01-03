@@ -39,7 +39,7 @@ Use
             array('lat'=>55.70,'lon'=>37.30),
             array('lat'=>55.70,'lon'=>37.40),
 			'options'=>array(
-				'strokeWidth'=> 5 // ширина линии'
+				'strokeWidth'=> 5
 			)
 		),
 	));
@@ -111,7 +111,7 @@ Polyline (broken lines) - you can peredevat as one item or as Grumm elements. To
 		array('lat'=>55.70,'lon'=>37.30),
 		array('lat'=>55.70,'lon'=>37.40),
 		'options'=>array(
-			'strokeWidth'=> 5 // ширина линии
+			'strokeWidth'=> 5
 		)
 	)
 ...
@@ -130,7 +130,7 @@ group
 			array('lat'=>55.70,'lon'=>37.30),
 			array('lat'=>55.70,'lon'=>37.40),
 			'options'=>array(
-				'strokeWidth'=> 5 // ширина линии
+				'strokeWidth'=> 5
 			)
 		),
 		array(
@@ -139,7 +139,7 @@ group
 			array('lat'=>55.70,'lon'=>37.30),
 			array('lat'=>55.70,'lon'=>37.40),
 			'options'=>array(
-				'strokeWidth'=> 5 // ширина линии
+				'strokeWidth'=> 5
 			)
 		),
 	),
