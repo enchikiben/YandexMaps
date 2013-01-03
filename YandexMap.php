@@ -28,7 +28,7 @@ class YandexMap extends CWidget
 	public $polyline = array();
 	
 	protected function registerClientScript()
-    {
+	{
 		$cs=Yii::app()->clientScript;
 
 		$url = array();
@@ -74,9 +74,9 @@ function init(){
 }
 
 EQF;
-		
+
 		$cs->registerScript($this->id,$js,CClientScript::POS_HEAD);
-    }
+	}
 	
 	protected function is_array(&$array){
 		list($key) = array_keys($array);
