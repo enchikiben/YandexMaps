@@ -6,6 +6,7 @@
  */
 class YandexMap extends CWidget
 {	
+	public $protocol = "http://";
 	public $lang = "ru-RU";
 	public $load = 'package.full';
 	public $key = null;
@@ -34,7 +35,7 @@ class YandexMap extends CWidget
 		$url[] = "load=".$this->load;
 		$url[] = "lang=".$this->lang;		
 		
-        $cs->registerScriptFile("//api-maps.yandex.ru/2.0-stable/?".  implode("&", $url) );
+        $cs->registerScriptFile($this->protocol."api-maps.yandex.ru/2.0-stable/?".  implode("&", $url) );
 		
 		$jsOptions = array();
 		
