@@ -150,15 +150,12 @@ EQF;
 		$polyline .= "map.geoObjects.add($name);";
 
 		return $polyline;
-	}	
-	
-	public function init()
-	{
-		$this->registerClientScript();
 	}
  
 	public function run()
 	{
+		parent::run();
+		$this->registerClientScript();
 		echo CHtml::tag('div',array(
 				'id' => $this->id,
 				'style' => "width:{$this->width}px;height:{$this->height}px;"
