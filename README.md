@@ -15,8 +15,7 @@ Place the extension files in a directory 'extensions' of your application. For e
 Use
 -----
 
-~~~
-[php]
+```php
 	$this->widget('ext.yandexmap.YandexMap',array(
 		'id'=>'map',
 		'width'=>600,
@@ -44,16 +43,15 @@ Use
 		),
 	));
 
-~~~
+```
 
 Use Placemark
 ---
 
 Placemark (labels) - can be passed as a single item or a group of elements.
 
-~~~
-[php]
-...
+```php
+// ...
 		'placemark' => array(
 				'lat'=>55.8,
 				'lon'=>37.8,
@@ -64,15 +62,14 @@ Placemark (labels) - can be passed as a single item or a group of elements.
 				)
 			
 		),
-...
+// ...
 
-~~~
+```
 
 group
 
-~~~
-[php]
-...
+```php
+// ...
 		'placemark' => array(
 			array(
 				'lat'=>55.8,
@@ -93,18 +90,17 @@ group
 				)
 			),
 		),
-...
+// ...
 
-~~~
+```
 
 Use Polyline
 ---
 
 Polyline (broken lines) - you can peredevat as one item or as Grumm elements. Tocher coordinates given arrays, and can be infinite.
 
-~~~
-[php]
-...
+```php
+// ...
 	'polyline' => array(		
 		array('lat'=>55.80,'lon'=>37.30),
 		array('lat'=>55.80,'lon'=>37.40),
@@ -114,15 +110,14 @@ Polyline (broken lines) - you can peredevat as one item or as Grumm elements. To
 			'strokeWidth'=> 5
 		)
 	)
-...
+// ...
 
-~~~
+```
 
 group
 
-~~~
-[php]
-...
+```php
+// ...
 	'polyline' => array(
 		array(
 			array('lat'=>55.80,'lon'=>37.30),
@@ -143,6 +138,6 @@ group
 			)
 		),
 	),
-...
+// ...
 
-~~~
+```
