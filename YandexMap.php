@@ -5,7 +5,11 @@
  * @author EnChikiben
  */
 class YandexMap extends CWidget
-{	
+{
+	private $cs = null;
+
+	public $htmlOptions = array();
+
 	public $protocol = "http://";
 	public $lang = "ru-RU";
 	public $load = 'package.full';
@@ -16,153 +20,198 @@ class YandexMap extends CWidget
 	public $height = 400;
 	public $zoom = 7;
 	public $center = array("ymaps.geolocation.latitude", "ymaps.geolocation.longitude");
-	
+
+	public $options = array();
+
 	public $zoomControl = true;
 	public $typeSelector = true;
 	public $mapTools = true;
 	public $smallZoomControl = true;
 	public $miniMap = true;
 
-
 	public $placemark = array();
 	public $polyline = array();
-	
-	protected function registerClientScript()
-	{
-		$cs=Yii::app()->clientScript;
 
+	protected function connectYandexJsFile(){
 		$url = array();
 		$url[] = "load=".$this->load;
-		$url[] = "lang=".$this->lang;		
+		$url[] = "lang=".$this->lang;
 
-		$cs->registerScriptFile($this->protocol."api-maps.yandex.ru/2.0-stable/?".  implode("&", $url) );
+		$this->cs->registerScriptFile($this->protocol."api-maps.yandex.ru/2.0-stable/?".  implode("&", $url) );
+	}
 
-		$jsOptions = array();
+	protected function initMapJsObject(){
+		$state = array();
 
-		if (is_array($this->center) && !empty($this->center) ) 
-			$jsOptions[] = "center:[{$this->center[0]},{$this->center[1]}]";
+		if (is_array($this->center) && !empty($this->center) )
+			$state[] = "center:[{$this->center[0]},{$this->center[1]}]";
+		else
+			throw new Exception('Error center map coordinat.');
 
-		if ( $this->zoom ) 
-			$jsOptions[] = 'zoom:'.$this->zoom;
+		if ( $this->zoom )
+			$state[] = 'zoom:'.$this->zoom;
 
+		$state = implode(",",$state);
+
+		$options = $this->generateOptions($this->options);
+		return "map = new ymaps.Map ('{$this->id}',{".$state."},{".$options."});";
+	}
+
+	protected function initMapControl(){
 		$controls = array();
 
-		if ( $this->zoomControl ) $controls[] = "add('zoomControl')";		
-		if ( $this->typeSelector ) $controls[] = "add('typeSelector')";		
-		if ( $this->smallZoomControl ) $controls[] = "add('mapTools')";		
-		if ( $this->miniMap ) $controls[] = "add('miniMap')";		
+		if ( $this->zoomControl ) $controls[] = "add('zoomControl')";
+		if ( $this->typeSelector ) $controls[] = "add('typeSelector')";
+		if ( $this->smallZoomControl ) $controls[] = "add('mapTools')";
+		if ( $this->miniMap ) $controls[] = "add('miniMap')";
 
-		$controls = "map.controls.".implode('.', $controls);
+		return "map.controls.".implode('.', $controls).';';
+	}
 
-		$placemark = $this->placemarks();		
-		$polyline = $this->polylines();		
 
-		$options = implode(",",$jsOptions);
+	protected function registerClientScript(){
+
+		$this->connectYandexJsFile();
+
+		$map = $this->initMapJsObject();
+		$control = $this->initMapControl();
+
+		$placemark = $this->placemarks();
+		$polyline = $this->polylines();
+
 		$js = <<<EQF
 
-ymaps.ready(init);
-var map;
-
-function init(){     
-	map = new ymaps.Map ("{$this->id}",{
-		$options
-	});
-
-	$controls
+ymaps.ready(function(){
+	$map
+	$control
 	$placemark
 	$polyline
-}
+
+});
 
 EQF;
 
-		$cs->registerScript($this->id,$js,CClientScript::POS_HEAD);
+		$this->cs->registerScript($this->id,$js,CClientScript::POS_END);
 	}
-	
+
 	protected function is_array(&$array){
 		list($key) = array_keys($array);
 		return is_array($array[$key]);
 	}
 
+	protected function generateOptions(&$array){
+		$options = array();
+
+		if ( !empty($array) && is_array($array) )
+			foreach ($array as $key => $value ) {
+				$options[] = CJavaScript::encode($key).":".CJavaScript::encode($value)."";
+			}
+
+		else
+			return null;
+
+		return implode(',', $options);
+	}
+
+
 	protected function placemarks(){
-				
+
 		$placemark = '';
 		if (is_array($this->placemark) && !empty($this->placemark) ){
 			if ( $this->is_array($this->placemark) ){
-				foreach ($this->placemark as $key => $value) {					
+				foreach ($this->placemark as $key => $value) {
 					$placemark .= $this->placemark('placemark_'.$key, $value);
-				}				
+				}
 			} else {
 				$placemark .= $this->placemark('placemark', $this->placemark);
 			}
 		}
-		
+
 		return $placemark;
 	}
 
-	protected function placemark($name,$value){
-		
+	protected function placemark($name,&$value){
+
+		if ( !isset($value['lat'],$value['lon']) ) return;
+
 		$placemark = '';
-		
-		$options = array();
-		if ( isset($value['options']) && !empty($value['options']) )
-			foreach ($value['options'] as $k=>$v) {
-				$options[] = $k.":'".$v."'";
-			}
-		$placemark .= "var {$name} = new ymaps.Placemark([{$value['lat']},{$value['lon']}],{".implode(',', $options)."},{});";
+
+		$properties = '';
+		if ( isset($value['properties']) ){
+			$properties = $this->generateOptions($value['properties']);
+		}
+
+		$options = '';
+		if ( isset($value['options']) ){
+			$options = $this->generateOptions($value['options']);
+		}
+
+		$placemark .= "var {$name} = new ymaps.Placemark([{$value['lat']},{$value['lon']}],{".$properties."},{".$options."});";
 		$placemark .= "map.geoObjects.add({$name});";
 
 		return $placemark;
-	}	
-	
+	}
+
+
 	protected function polylines(){
 		$polylines = '';
 		if ( is_array($this->polyline) && !empty($this->polyline) ){
-			
+
 			list($key) = array_keys($this->polyline);
 			if ( $this->is_array($this->polyline) && !isset($this->polyline[$key]['lat']) ){
-				foreach ($this->polyline as $key => $value)				
+				foreach ($this->polyline as $key => $value)
 					$polylines .= $this->polyline('polyline_'.$key,$value);
 			} else {
 				$polylines .= $this->polyline('polyline',$this->polyline);
 			}
-			
+
 		}
 		return $polylines;
 	}
-	
-	protected function polyline($name,$value){
-		
+
+	protected function polyline($name,&$value){
+
 		$polyline = '';
+
 		$coordinates = array();
-		
 		foreach ($value as $coordinate) {
 			if ( isset($coordinate['lat'],$coordinate['lon']) )
 				$coordinates[] = "[".$coordinate['lat'].",".$coordinate['lon']."]";
-		}		
-		
-		$options = array();
-		if ( isset($value['options']) && !empty($value['options']) )
-			foreach ($value['options'] as $k=>$v) {
-				$options[] = $k.":'".$v."'";
-			}
-			
-		$polyline .= "var $name = new ymaps.Polyline([".implode(',', $coordinates)."], {}, {".implode(',', $options)."});";
+		}
+
+		if ( empty($coordinates) ) return;
+
+		$properties = '';
+		if ( isset($value['properties']) ){
+			$properties = $this->generateOptions($value['properties']);
+		}
+
+		$options = '';
+		if ( isset($value['options']) ){
+			$options = $this->generateOptions($value['options']);
+		}
+
+		$polyline .= "var $name = new ymaps.Polyline([".implode(',', $coordinates)."], {".$properties."}, {".$options."});";
 		$polyline .= "map.geoObjects.add($name);";
 
 		return $polyline;
-	}	
-	
-	public function init()
-	{
+	}
+
+
+	public function init(){
+		$this->cs = Yii::app()->clientScript;
+
 		$this->registerClientScript();
 	}
- 
-	public function run()
-	{
-		echo CHtml::tag('div',array(
-				'id' => $this->id,
-				'style' => "width:{$this->width}px;height:{$this->height}px;"
-			));		
-	}	
+
+	public function run(){
+
+		$this->htmlOptions['id'] = $this->id;
+
+		if ( !isset($this->htmlOptions['style']) )
+			$this->htmlOptions['style'] = "width:{$this->width}px;height:{$this->height}px;";
+
+		echo CHtml::tag('div',$this->htmlOptions);
+	}
 }
 ?>

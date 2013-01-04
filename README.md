@@ -15,8 +15,8 @@ Place the extension files in a directory 'extensions' of your application. For e
 Use
 -----
 
-~~~
-[php]
+```php
+
 	$this->widget('ext.yandexmap.YandexMap',array(
 		'id'=>'map',
 		'width'=>600,
@@ -26,10 +26,13 @@ Use
 			array(
 				'lat'=>55.8,
 				'lon'=>37.8,
-				'options'=>array(
+				'properties'=>array(
 					'balloonContentHeader'=>'header',
-					'balloonContentBody'=>'body',
+					'balloonContent'=>'1',
 					'balloonContentFooter'=>'footer',
+				),
+				'options'=>array(
+					'draggable'=>true
 				)
 			)
 		),
@@ -38,99 +41,127 @@ Use
 			array('lat'=>55.80,'lon'=>37.40),
             array('lat'=>55.70,'lon'=>37.30),
             array('lat'=>55.70,'lon'=>37.40),
+			'properties'=>array(
+				'balloonContentHeader'=>'header',
+				'balloonContent'=>'Ломаная линия',
+				'balloonContentFooter'=>'footer',
+			),
 			'options'=>array(
-				'strokeWidth'=> 5
+				'draggable'=>true,
+				'strokeColor'=> '#000000',
+				'strokeWidth'=> 4,
+				'strokeStyle'=> '1 5'
 			)
 		),
 	));
 
-~~~
+```
 
 Use Placemark
 ---
 
 Placemark (labels) - can be passed as a single item or a group of elements.
 
-~~~
-[php]
-...
-		'placemark' => array(
-				'lat'=>55.8,
-				'lon'=>37.8,
-				'options'=>array(
-					'balloonContentHeader'=>'header',
-					'balloonContentBody'=>'body',
-					'balloonContentFooter'=>'footer',
-				)
-			
+```php
+// ...
+	'placemark' => array(
+		'lat'=>55.8,
+		'lon'=>37.8,
+		'properties'=>array(
+			'balloonContentHeader'=>'header',
+			'balloonContent'=>'1',
+			'balloonContentFooter'=>'footer',
 		),
-...
+		'options'=>array(
+			'draggable'=>true
+		)
+	),
+// ...
 
-~~~
+```
 
 group
 
-~~~
-[php]
-...
-		'placemark' => array(
-			array(
-				'lat'=>55.8,
-				'lon'=>37.8,
-				'options'=>array(
-					'balloonContentHeader'=>'header',
-					'balloonContentBody'=>'body',
-					'balloonContentFooter'=>'footer',
-				)
+```php
+// ...
+	'placemark' => array(
+		array(
+			'lat'=>55.8,
+			'lon'=>37.8,
+			'properties'=>array(
+				'balloonContentHeader'=>'header',
+				'balloonContent'=>'placemark_1',
+				'balloonContentFooter'=>'footer',
 			),
-			array(
-				'lat'=>55.8,
-				'lon'=>37.8,
-				'options'=>array(
-					'balloonContentHeader'=>'header',
-					'balloonContentBody'=>'body',
-					'balloonContentFooter'=>'footer',
-				)
-			),
+			'options'=>array(
+				'draggable'=>true
+			)
 		),
-...
+		array(
+			'lat'=>55.8,
+			'lon'=>37.8,
+			'properties'=>array(
+				'balloonContentHeader'=>'header',
+				'balloonContent'=>'placemark_2',
+				'balloonContentFooter'=>'footer',
+			),
+			'options'=>array(
+				'draggable'=>true
+			)
+		),
+	),
+// ...
 
-~~~
+```
 
 Use Polyline
 ---
 
 Polyline (broken lines) - you can peredevat as one item or as Grumm elements. Tocher coordinates given arrays, and can be infinite.
 
-~~~
-[php]
-...
-	'polyline' => array(		
+```php
+// ...
+	'polyline' => array(
 		array('lat'=>55.80,'lon'=>37.30),
 		array('lat'=>55.80,'lon'=>37.40),
 		array('lat'=>55.70,'lon'=>37.30),
 		array('lat'=>55.70,'lon'=>37.40),
+		'properties'=>array(
+			'balloonContentHeader'=>'header',
+			'balloonContent'=>'Ломаная линия',
+			'balloonContentFooter'=>'footer',
+		),
 		'options'=>array(
-			'strokeWidth'=> 5
+			'draggable'=>true,
+			'strokeColor'=> '#000000',
+			'strokeWidth'=> 4,
+			'strokeStyle'=> '1 5'
 		)
-	)
-...
+	),
+// ...
 
-~~~
+```
 
 group
 
-~~~
-[php]
-...
+```php
+// ...
 	'polyline' => array(
 		array(
 			array('lat'=>55.80,'lon'=>37.30),
 			array('lat'=>55.80,'lon'=>37.40),
 			array('lat'=>55.70,'lon'=>37.30),
 			array('lat'=>55.70,'lon'=>37.40),
+			'properties'=>array(
+				'balloonContentHeader'=>'header',
+				'balloonContent'=>'Ломаная линия 1',
+				'balloonContentFooter'=>'footer',
+			),
 			'options'=>array(
-				'strokeWidth'=> 5
+				'draggable'=>true,
+				'strokeColor'=> '#000000',
+				'strokeWidth'=> 4,
+				'strokeStyle'=> '1 5'
 			)
 		),
 		array(
@@ -138,11 +169,19 @@ group
 			array('lat'=>55.80,'lon'=>37.40),
 			array('lat'=>55.70,'lon'=>37.30),
 			array('lat'=>55.70,'lon'=>37.40),
+			'properties'=>array(
+				'balloonContentHeader'=>'header',
+				'balloonContent'=>'Ломаная линия 2',
+				'balloonContentFooter'=>'footer',
+			),
 			'options'=>array(
-				'strokeWidth'=> 5
+				'draggable'=>true,
+				'strokeColor'=> '#000000',
+				'strokeWidth'=> 4,
+				'strokeStyle'=> '1 5'
 			)
 		),
 	),
-...
+// ...
 
-~~~
+```
