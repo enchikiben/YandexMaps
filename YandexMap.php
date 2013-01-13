@@ -14,6 +14,9 @@ class YandexMap extends CWidget
 	public $lang = "ru-RU";
 	public $load = 'package.full';
 	public $key = null;
+	public $coordorder = 'latlong';
+	public $mode = 'release';
+
 
 	public $id = 'yandexmap';
 	public $width = 600;
@@ -23,11 +26,17 @@ class YandexMap extends CWidget
 
 	public $options = array();
 
-	public $zoomControl = true;
-	public $typeSelector = true;
-	public $mapTools = true;
-	public $smallZoomControl = true;
-	public $miniMap = true;
+	public $controls = array(
+		'zoomControl' => true,
+		'typeSelector' => true,
+		'mapTools' => true,
+		'smallZoomControl' => false,
+		'miniMap' => true,
+		'scaleLine' => true,
+		'searchControl' => true,
+		'trafficControl' => true
+	);
+
 
 	public $placemark = array();
 	public $polyline = array();
@@ -60,10 +69,11 @@ class YandexMap extends CWidget
 	protected function initMapControl(){
 		$controls = array();
 
-		if ( $this->zoomControl ) $controls[] = "add('zoomControl')";
-		if ( $this->typeSelector ) $controls[] = "add('typeSelector')";
-		if ( $this->smallZoomControl ) $controls[] = "add('mapTools')";
-		if ( $this->miniMap ) $controls[] = "add('miniMap')";
+		if ( is_array($this->controls) && !empty($this->controls) )
+			foreach ($this->controls as $key => $value ) {
+				if ( $value )
+					$controls[] = "add(".CJavaScript::encode($key).")";
+			}
 
 		return "map.controls.".implode('.', $controls).';';
 	}
@@ -106,7 +116,6 @@ EQF;
 			foreach ($array as $key => $value ) {
 				$options[] = CJavaScript::encode($key).":".CJavaScript::encode($value)."";
 			}
-
 		else
 			return null;
 
