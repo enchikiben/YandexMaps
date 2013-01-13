@@ -1,5 +1,5 @@
 Yandex Maps
-==========
+===========
 
 Yii Yandex Maps addition to allowing sozlavat map with labels and lines.
 
