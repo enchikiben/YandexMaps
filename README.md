@@ -1,5 +1,5 @@
 Yandex Maps
-==========
+===========
 
 Yii Yandex Maps addition to allowing sozlavat map with labels and lines.
 
@@ -16,7 +16,6 @@ Use
 -----
 
 ```php
-
 	$this->widget('ext.yandexmap.YandexMap',array(
 		'id'=>'map',
 		'width'=>600,
@@ -63,7 +62,6 @@ Use Placemark
 Placemark (labels) - can be passed as a single item or a group of elements.
 
 ```php
-// ...
 	'placemark' => array(
 		'lat'=>55.8,
 		'lon'=>37.8,
@@ -76,14 +74,11 @@ Placemark (labels) - can be passed as a single item or a group of elements.
 			'draggable'=>true
 		)
 	),
-// ...
-
 ```
 
 group
 
 ```php
-// ...
 	'placemark' => array(
 		array(
 			'lat'=>55.8,
@@ -110,7 +105,6 @@ group
 			)
 		),
 	),
-// ...
 
 ```
 
@@ -120,7 +114,6 @@ Use Polyline
 Polyline (broken lines) - you can peredevat as one item or as Grumm elements. Tocher coordinates given arrays, and can be infinite.
 
 ```php
-// ...
 	'polyline' => array(
 		array('lat'=>55.80,'lon'=>37.30),
 		array('lat'=>55.80,'lon'=>37.40),
@@ -138,8 +131,6 @@ Polyline (broken lines) - you can peredevat as one item or as Grumm elements. To
 			'strokeStyle'=> '1 5'
 		)
 	),
-// ...
-
 ```
 
 group
