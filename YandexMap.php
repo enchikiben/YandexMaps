@@ -1,7 +1,5 @@
 <?php
 /**
- * Description of YandexMap
- *
  * @author EnChikiben
  */
 class YandexMap extends CWidget
