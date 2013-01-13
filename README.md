@@ -21,6 +21,16 @@ Use
 		'width'=>600,
 		'height'=>400,
 		'center'=>array(55.76, 37.64),
+		'controls' => array(
+			'zoomControl' => true,
+			'typeSelector' => true,
+			'mapTools' => true,
+			'smallZoomControl' => false,
+			'miniMap' => true,
+			'scaleLine' => true,
+			'searchControl' => true,
+			'trafficControl' => true
+		),
 		'placemark' => array(
 			array(
 				'lat'=>55.8,
