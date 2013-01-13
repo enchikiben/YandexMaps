@@ -94,7 +94,6 @@ ymaps.ready(function(){
 	$control
 	$placemark
 	$polyline
-
 });
 
 EQF;
