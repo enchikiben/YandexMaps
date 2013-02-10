@@ -217,7 +217,7 @@ EQF;
 		if ( !isset($this->htmlOptions['style']) )
 			$this->htmlOptions['style'] = "width:{$this->width}px;height:{$this->height}px;";
 
-		echo CHtml::tag('div',$this->htmlOptions);
+		echo CHtml::tag('div',$this->htmlOptions,'');
 	}
 }
 ?>
