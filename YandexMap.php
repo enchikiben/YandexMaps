@@ -19,11 +19,11 @@ class YandexMap extends CWidget
 	public $id = 'yandexmap';
 	public $width = 600;
 	public $height = 400;
-	public $zoom = 7;
+	public $zoom = 10;
 	public $center = array("ymaps.geolocation.latitude", "ymaps.geolocation.longitude");
-
+        public $behaviors = array('default', 'scrollZoom');
 	public $options = array();
-
+        public $clustering = true;
 	public $controls = array(
 		'zoomControl' => true,
 		'typeSelector' => true,
@@ -38,6 +38,7 @@ class YandexMap extends CWidget
 
 	public $placemark = array();
 	public $polyline = array();
+        public $route = array();
 
 	protected function connectYandexJsFile(){
 		$url = array();
@@ -57,6 +58,11 @@ class YandexMap extends CWidget
 
 		if ( $this->zoom )
 			$state[] = 'zoom:'.$this->zoom;
+                foreach ($this->behaviors as $key => $value) {
+                    $this->behaviors[$key]="'".$value."'";
+                }
+                $beh=implode(",",$this->behaviors);
+                $state[]='behaviors:['.$beh.']';
 
 		$state = implode(",",$state);
 
@@ -83,18 +89,19 @@ class YandexMap extends CWidget
 
 		$map = $this->initMapJsObject();
 		$control = $this->initMapControl();
-
+                
 		$placemark = $this->placemarks();
 		$polyline = $this->polylines();
-
+                $route = $this->route();
 		$js = <<<EQF
 
-ymaps.ready(function(){
-	$map
-	$control
+ymaps.ready(function(){\n 
+	$map\n 
+	$control\n 
+        $route\n 
 	$placemark
-	$polyline
-});
+	$polyline\n         
+});\n 
 
 EQF;
 
@@ -121,18 +128,33 @@ EQF;
 
 
 	protected function placemarks(){
-
-		$placemark = '';
+            if ($this->clustering){
+		$placemark = 'var myGeoObjects = [];';
 		if (is_array($this->placemark) && !empty($this->placemark) ){
 			if ( $this->is_array($this->placemark) ){
 				foreach ($this->placemark as $key => $value) {
-					$placemark .= $this->placemark('placemark_'.$key, $value);
+					$placemark .= $this->placemark($key, $value);
 				}
 			} else {
 				$placemark .= $this->placemark('placemark', $this->placemark);
 			}
 		}
-
+                $placemark.="clusterer = new ymaps.Clusterer({clusterDisableClickZoom: true, gridSize:96});\n
+                            clusterer.add(myGeoObjects);\n
+                            map.geoObjects.add(clusterer);\n";
+            }
+            else{
+                $placemark = '';
+                if (is_array($this->placemark) && !empty($this->placemark) ){
+			if ( $this->is_array($this->placemark) ){
+				foreach ($this->placemark as $key => $value) {
+					$placemark .= $this->placemark("placemark_".$key, $value);
+				}
+			} else {
+				$placemark .= $this->placemark('placemark', $this->placemark);
+			}
+		}
+            }
 		return $placemark;
 	}
 
@@ -151,13 +173,40 @@ EQF;
 		if ( isset($value['options']) ){
 			$options = $this->generateOptions($value['options']);
 		}
-
-		$placemark .= "var {$name} = new ymaps.Placemark([{$value['lat']},{$value['lon']}],{".$properties."},{".$options."});";
-		$placemark .= "map.geoObjects.add({$name});";
+                if ($this->clustering){
+                    $placemark .= "myGeoObjects[{$name}] = new ymaps.Placemark([{$value['lat']},{$value['lon']}],{".$properties."},{".$options."}); ";
+                }
+                else{
+                    $placemark .= "var {$name} = new ymaps.Placemark([{$value['lat']},{$value['lon']}],{".$properties."},{".$options."}); ";
+                    $placemark .= "map.geoObjects.add({$name}); ";
+                }
 
 		return $placemark;
 	}
+        protected function route(){
 
+		if ($this->route["from"]=="") return;
+
+		$route = '';
+                $address2 = CJavaScript::encode($this->route["from"]);
+		$address1 = CJavaScript::encode($this->route["to"]);
+                $success=CJavaScript::encode($this->route["success"]);
+		$route.= "\n ymaps.route([".$address2.",".$address1."]).then(function (route) {\n 
+                            map.geoObjects.add(route);\n 
+                            var points = route.getWayPoints();\n 
+                            lastPoint = points.getLength() - 1;\n 
+                            $success
+                            points.options.set('preset', 'twirl#redStretchyIcon');
+                            // Задаем контент меток в начальной и конечной точках.
+                            points.get(0).properties.set('iconContent', 'Точка отправления');
+                            points.get(lastPoint).properties.set('iconContent', 'Точка прибытия');
+                            map.panTo(points.get(lastPoint).geometry.getCoordinates());\n 
+                         }, function (error) {\n 
+                            alert('Призошла ошибка: ' + error.message);\n 
+                        });\n ";
+
+		return $route;
+	}
 
 	protected function polylines(){
 		$polylines = '';
@@ -197,8 +246,8 @@ EQF;
 			$options = $this->generateOptions($value['options']);
 		}
 
-		$polyline .= "var $name = new ymaps.Polyline([".implode(',', $coordinates)."], {".$properties."}, {".$options."});";
-		$polyline .= "map.geoObjects.add($name);";
+		$polyline .= "var $name = new ymaps.Polyline([".implode(',', $coordinates)."], {".$properties."}, {".$options."});\n";
+		$polyline .= "map.geoObjects.add($name);\n";
 
 		return $polyline;
 	}
