@@ -184,6 +184,10 @@ EQF;
 		return $placemark;
 	}
         protected function route(){
+        	
+        	//if ($this->route["from"]=="") return;
+        	//Замените на 
+        	//if (!isset($this->route["from"])) return;
 
 		if ($this->route["from"]=="") return;
 
